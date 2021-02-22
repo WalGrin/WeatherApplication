@@ -1,22 +1,101 @@
-<div class="card" *ngFor="let city of subscribe_cities; let idx = index">
-  <span class="completed">{{ city.name }}</span>
-  <div class="card__params">Температура {{ city.temp | number: "1.0-0" }}</div>
-  <div class="card__params">Влажность {{ city.humidity }}</div>
-  <button class="btn" (click)="checkHumdity(city.name)">Обновить</button>
-  <div class="card__params">Давление {{ city.pressure }}</div>
-  <div class="card__params">Скорость ветра {{ city.wind_speed }}</div>
-  <div class="card__params">Направление ветра {{ city.wind_direction }}</div>
-  <div class="card__params">Рисунок {{ city.weather_icon }}</div>
-  <div class="card__params">Погода {{ city.weather_description }}</div>
-  <div class="card__params">
-    Дата обновления {{ city.date | date: "dd.MM.yyyy HH:mm:ss" }}
+<div class="weather" *ngFor="let city of subscribe_cities; let idx = index">
+  <div class="weather__inner">
+    <div class="current">
+      <div class="current__city">{{ city.name }}</div>
+      <button class="btn" (click)="removeFollowCity(idx)">Отписаться</button>
+      <div
+        class="forecast__icon icon__01d"
+        *ngIf="city.weather_icon == '01d'"
+      ></div>
+      <div
+        class="forecast__icon icon__01n"
+        *ngIf="city.weather_icon == '01n'"
+      ></div>
+      <div
+        class="forecast__icon icon__02d"
+        *ngIf="city.weather_icon == '02d'"
+      ></div>
+      <div
+        class="forecast__icon icon__02n"
+        *ngIf="city.weather_icon == '02n'"
+      ></div>
+      <div
+        class="forecast__icon icon__03d"
+        *ngIf="city.weather_icon == '03d'"
+      ></div>
+      <div
+        class="forecast__icon icon__03n"
+        *ngIf="city.weather_icon == '03n'"
+      ></div>
+      <div
+        class="forecast__icon icon__04d"
+        *ngIf="city.weather_icon == '04d'"
+      ></div>
+      <div
+        class="forecast__icon icon__04n"
+        *ngIf="city.weather_icon == '04n'"
+      ></div>
+      <div
+        class="forecast__icon icon__09d"
+        *ngIf="city.weather_icon == '09d'"
+      ></div>
+      <div
+        class="forecast__icon icon__09n"
+        *ngIf="city.weather_icon == '09n'"
+      ></div>
+      <div
+        class="forecast__icon icon__10d"
+        *ngIf="city.weather_icon == '10d'"
+      ></div>
+      <div
+        class="forecast__icon icon__10n"
+        *ngIf="city.weather_icon == '10n'"
+      ></div>
+      <div
+        class="forecast__icon icon__11n"
+        *ngIf="city.weather_icon == '11n'"
+      ></div>
+      <div
+        class="forecast__icon icon__13d"
+        *ngIf="city.weather_icon == '13d'"
+      ></div>
+      <div
+        class="forecast__icon icon__13n"
+        *ngIf="city.weather_icon == '13n'"
+      ></div>
+      <div
+        class="forecast__icon icon__50d"
+        *ngIf="city.weather_icon == '50d'"
+      ></div>
+      <div
+        class="forecast__icon icon__50n"
+        *ngIf="city.weather_icon == '50n'"
+      ></div>
+      <div class="current__description">{{ city.weather_description }}</div>
+      <div class="current__temperature">{{ city.temp | number: "1.0-0" }}˚</div>
+      <div class="current__update">
+        Обновл. {{ city.date | date: "dd.MM.yyyy HH:mm:ss" }}
+      </div>
+      <button class="btn" (click)="checkAllParams(city.name)">
+        Обновить все данные
+      </button>
+    </div>
+    <div class="details">
+      <div class="details__item">
+        <div class="details__name">Давление</div>
+        <div class="details__value">{{ city.pressure }} мм. рт. ст.</div>
+      </div>
+      <div class="details__item">
+        <div class="details__name">Влажность</div>
+        <div class="details__value">{{ city.humidity }} %</div>
+        <button class="btn" (click)="checkHumdity(city.name)">Обновить</button>
+      </div>
+      <div class="details__item">
+        <div class="details__name">Ветер</div>
+        <div class="details__value">
+          {{ city.wind_speed }} м/с и направление {{ city.wind_direction }} deg
+        </div>
+      </div>
+    </div>
   </div>
-  <span>
-    <button class="btn btn-danger" (click)="removeFollowCity(idx)">
-      Удалить
-    </button>
-    <button class="btn" (click)="checkAllParams(city.name)">
-      Обновить все данные
-    </button>
-  </span>
 </div>
