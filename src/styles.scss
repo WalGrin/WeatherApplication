@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(360deg, #55707e 0%, rgba(255, 255, 255, 0) 100%),
+    #042232;
+  color: #fff;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}

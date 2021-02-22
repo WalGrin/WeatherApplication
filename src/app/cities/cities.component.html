@@ -1,0 +1,22 @@
+<div class="card" *ngFor="let city of subscribe_cities; let idx = index">
+  <span class="completed">{{ city.name }}</span>
+  <div class="card__params">Температура {{ city.temp | number: "1.0-0" }}</div>
+  <div class="card__params">Влажность {{ city.humidity }}</div>
+  <button class="btn" (click)="checkHumdity(city.name)">Обновить</button>
+  <div class="card__params">Давление {{ city.pressure }}</div>
+  <div class="card__params">Скорость ветра {{ city.wind_speed }}</div>
+  <div class="card__params">Направление ветра {{ city.wind_direction }}</div>
+  <div class="card__params">Рисунок {{ city.weather_icon }}</div>
+  <div class="card__params">Погода {{ city.weather_description }}</div>
+  <div class="card__params">
+    Дата обновления {{ city.date | date: "dd.MM.yyyy HH:mm:ss" }}
+  </div>
+  <span>
+    <button class="btn btn-danger" (click)="removeFollowCity(idx)">
+      Удалить
+    </button>
+    <button class="btn" (click)="checkAllParams(city.name)">
+      Обновить все данные
+    </button>
+  </span>
+</div>

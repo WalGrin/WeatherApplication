@@ -1,0 +1,13 @@
+<div *ngIf="cities_names.length == 0; else Viget"></div>
+<ng-template #Viget>
+  <div class="card">
+    <div class="card__params">
+      Город с масксимальной температурой
+      <!-- {{ maxtemp | number: "1.0-0" }} -->
+    </div>
+    <div class="card__params">
+      Город с минимальной температурой
+      <!-- {{ mintemp | number: "1.0-0" }} -->
+    </div>
+  </div>
+</ng-template>
