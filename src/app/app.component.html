@@ -14,7 +14,11 @@
     </div>
   </div>
 
-  <app-wiget [cities_names]="city_names"></app-wiget>
+  <app-wiget
+    [cities_names]="city_names"
+    [mintemp]="mintempcity"
+    [maxtemp]="maxtempcity"
+  ></app-wiget>
 
   <app-cities
     [subscribe_cities]="follow_cities"

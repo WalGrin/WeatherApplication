@@ -4,7 +4,8 @@ import {
   Triggers,
   WeatherparamsAll,
 } from './local.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { StorigeService } from './storige.service';
 
 @Component({
   selector: 'app-root',
@@ -14,28 +15,62 @@ import { Component } from '@angular/core';
     '../app/font-awesome/css/font-awesome.min.css',
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  mintempcity: string;
+  maxtempcity: string;
   city_name: string = '';
   city_names: string[] = [];
   follow_cities: Weatherparams[] = [];
   triggers: Triggers = {
     hum: false,
-    pre: false,
-    ws: false,
-    wdi: false,
-    wi: false,
-    wde: false,
     alldata: false,
   };
 
-  constructor(public localservice: LocalService) {}
+  constructor(
+    public localservice: LocalService,
+    private storigeService: StorigeService
+  ) {}
+
+  ngOnInit() {
+    this.checkLocalData();
+  }
+
+  checkLocalData() {
+    this.storigeService.storage.get('cities').subscribe((cities: string[]) => {
+      console.log(cities);
+      if (cities) {
+        if (!this.localservice.hasLocalData()) {
+          cities.forEach((item) => {
+            this.city_names.push(item);
+          });
+          this.city_names.forEach((item) => {
+            this.getCityWeather(item);
+          });
+        } else {
+          cities.forEach((item) => {
+            this.city_names.push(item);
+          });
+          this.localservice.getLocalData().forEach((item) => {
+            this.follow_cities.push(item);
+          });
+          this.getMinMaxTemp();
+        }
+      }
+    });
+  }
 
   addCityName() {
     console.log('Hello');
     if (!this.city_name.trim()) {
       return;
     }
+    if (this.city_names.includes(this.city_name)) {
+      return;
+    }
     this.city_names.push(this.city_name);
+    this.storigeService.storage
+      .set('cities', this.city_names)
+      .subscribe(() => {});
     console.log('Отслеживаемые города', this.city_names);
     this.getCityWeather(this.city_name);
   }
@@ -81,22 +116,30 @@ export class AppComponent {
     } else {
       console.log(city_weather);
       this.follow_cities.push(city_weather);
+      this.localservice.pushLocalDate(this.follow_cities);
       console.log(this.follow_cities);
     }
+    this.getMinMaxTemp();
   }
 
   removeFollowCity(idx: number) {
     console.log(idx);
     this.follow_cities.splice(idx, 1);
     this.city_names.splice(idx, 1);
+    this.storigeService.storage.delete('cities').subscribe(() => {});
+    this.storigeService.storage
+      .set('cities', this.city_names)
+      .subscribe(() => {});
+    this.localservice.pushLocalDate(this.follow_cities);
+    this.getMinMaxTemp();
   }
 
-  checkHumdity(name) {
+  checkHumdity(name: string) {
     this.triggers.hum = !this.triggers.hum;
     this.getCityWeather(name);
   }
 
-  checkAllParams(name) {
+  checkAllParams(name: string) {
     this.triggers.alldata = !this.triggers.alldata;
     this.getCityWeather(name);
   }
@@ -109,5 +152,26 @@ export class AppComponent {
       }
     });
     this.triggers.hum = !this.triggers.hum;
+  }
+
+  getMinMaxTemp() {
+    if (this.follow_cities.length == 0) {
+      return;
+    } else {
+      const temparr: number[] = [];
+      this.follow_cities.forEach((item) => {
+        temparr.push(item.temp);
+      });
+      let maxtemp = Math.max.apply(null, temparr);
+      let mintemp = Math.min.apply(null, temparr);
+      this.follow_cities.forEach((item) => {
+        if (item.temp == maxtemp) {
+          this.maxtempcity = item.name;
+        }
+        if (item.temp == mintemp) {
+          this.mintempcity = item.name;
+        }
+      });
+    }
   }
 }

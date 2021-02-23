@@ -7,5 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class WigetComponent {
   @Input() cities_names: string[];
+  @Input() mintemp: string;
+  @Input() maxtemp: string;
   constructor() {}
 }

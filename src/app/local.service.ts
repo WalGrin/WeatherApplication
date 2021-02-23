@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 
 const API_KEY = 'f95a35cf371696bb0839bf8905b7e772';
 const LANG = 'ru';
+const STORAGE_KEY = 'list_cities';
 
 export interface WeatherparamsAll {
   coord: {};
@@ -60,19 +62,31 @@ export interface Weatherparams {
 
 export interface Triggers {
   hum: boolean;
-  pre: boolean;
-  ws: boolean;
-  wdi: boolean;
-  wi: boolean;
-  wde: boolean;
   alldata: boolean;
 }
 @Injectable({
   providedIn: 'root',
 })
 export class LocalService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(LOCAL_STORAGE) private storage: StorageService
+  ) {}
 
+  hasLocalData(): boolean {
+    return this.storage.has(STORAGE_KEY);
+  }
+  getLocalData() {
+    return this.storage.get(STORAGE_KEY);
+  }
+
+  pushLocalDate(data) {
+    this.storage.set(STORAGE_KEY, data);
+  }
+
+  deleteLocalData() {
+    this.storage.clear();
+  }
   getCity(cityname: string) {
     return this.http.get<WeatherparamsAll>(
       `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=${API_KEY}&lang=${LANG}`
